@@ -2,6 +2,7 @@ import shutil
 from copy import copy
 from pathlib import Path
 
+import tomlkit
 # https://github.com/cookiecutter/cookiecutter/issues/824
 #   our workaround is to include these utility functions in the CCDS package
 from ccds.hook_utils.custom_config import write_custom_config
@@ -10,10 +11,15 @@ from ccds.hook_utils.dependencies import (
     packages,
     ruff,
     scaffold,
-    build_deps,
+    # build_deps,
     write_dependencies,
     write_python_version,
 )
+
+build_deps = [
+    "build",
+    "setuptools-scm",
+]
 
 #
 #  TEMPLATIZED VARIABLES FILLED IN BY COOKIECUTTER
@@ -28,7 +34,7 @@ packages_to_install += scaffold
 packages_to_install += basic
 # {% endif %}
 
-dev_packages_to_install = [ruff, build_deps]
+dev_packages_to_install = ruff + build_deps
 
 # track packages that are not available through conda
 pip_only_packages = [ ]
@@ -37,6 +43,9 @@ pip_only_packages = [ ]
 conda_package_aliases = {
     "build": "python-build"
 }
+
+if "{{ cookiecutter.dependency_file }}" == "environment.yaml":
+    packages_to_install = [conda_package_aliases.get(p, p) for p in packages+dev_packages_to_install if p not in pip_only_packages]
 
 # Use the selected documentation package specified in the config,
 # or none if none selected
@@ -62,9 +71,17 @@ write_dependencies(
     repo_name="{{ cookiecutter.repo_name }}",
     module_name="{{ cookiecutter.module_name }}",
     python_version="{{ cookiecutter.python_version_number }}",
-    conda_package_aliases=conda_package_aliases,
-    dev_packages=dev_packages_to_install
+    # conda_package_aliases=conda_package_aliases,
+    # dev_packages=dev_packages_to_install
 )
+
+if "{{ cookiecutter.dependency_file }}" == "pyproject.yaml":
+    with open("pyproject.yaml", "r") as f:
+        doc = tomlkit.parse(f.read())
+    doc["dependency-groups"].add("dev", sorted(dev_packages_to_install))
+
+    with open("pyproject.yaml", "w") as f:
+        f.write(tomlkit.dumps(doc))
 
 write_python_version("{{ cookiecutter.python_version_number }}")
 

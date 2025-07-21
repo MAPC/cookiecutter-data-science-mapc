@@ -5,6 +5,12 @@ packages = [
     "python-dotenv",
 ]
 
+flake8_black_isort = [
+    "black",
+    "flake8",
+    "isort",
+]
+
 ruff = ["ruff"]
 
 basic = [
@@ -21,12 +27,6 @@ scaffold = [
     "typer",
     "loguru",
     "tqdm",
-    "sqlalchemy"
-]
-
-build_deps = [
-    "build",
-    "setuptools-scm",
 ]
 
 
@@ -74,13 +74,21 @@ def write_python_version(python_version):
 
 
 def write_dependencies(
-    dependencies, packages, pip_only_packages, repo_name, module_name, python_version, conda_package_aliases, dev_packages
+    dependencies, packages, pip_only_packages, repo_name, module_name, python_version
 ):
-    if dependencies == "pyproject.toml":
+    if dependencies == "requirements.txt":
+        with open(dependencies, "w") as f:
+            lines = sorted(packages)
+
+            lines += ["" "-e ."]
+
+            f.write("\n".join(lines))
+            f.write("\n")
+
+    elif dependencies == "pyproject.toml":
         with open(dependencies, "r") as f:
             doc = tomlkit.parse(f.read())
         doc["project"].add("dependencies", sorted(packages))
-        doc["dependency-groups"].add("dev", sorted(dev_packages))
         doc["project"]["dependencies"].multiline(True)
 
         with open(dependencies, "w") as f:
@@ -96,10 +104,21 @@ def write_dependencies(
             ]
 
             lines += [f"  - python={python_version}"]
-            lines += [f"  - {conda_package_aliases.get(p, p)}" for p in packages+dev_packages if p not in pip_only_packages]
+            lines += [f"  - {p}" for p in packages if p not in pip_only_packages]
 
             lines += ["  - pip:"]
             lines += [f"    - {p}" for p in packages if p in pip_only_packages]
             lines += ["    - -e ."]
+
+            f.write("\n".join(lines))
+
+    elif dependencies == "Pipfile":
+        with open(dependencies, "w") as f:
+            lines = ["[packages]"]
+            lines += [f'{p} = "*"' for p in sorted(packages)]
+
+            lines += [f'"{module_name}" ={{editable = true, path = "."}}']
+
+            lines += ["", "[requires]", f'python_version = "{python_version}"']
 
             f.write("\n".join(lines))

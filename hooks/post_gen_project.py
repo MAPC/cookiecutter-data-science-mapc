@@ -71,7 +71,7 @@ Path("pyproject.toml").write_text(pyproject_text.replace(r"\u0027", "'"))
 
 # {% if cookiecutter.include_code_scaffold == "No" %}
 # remove everything except __init__.py so result is an empty package
-for generated_path in Path("{{ cookiecutter.module_name }}").iterdir():
+for generated_path in Path("src/{{ cookiecutter.module_name }}").iterdir():
     if generated_path.is_dir():
         shutil.rmtree(generated_path)
     elif generated_path.name != "__init__.py":

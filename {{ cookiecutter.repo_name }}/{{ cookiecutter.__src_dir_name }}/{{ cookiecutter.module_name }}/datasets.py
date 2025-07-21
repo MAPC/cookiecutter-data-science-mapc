@@ -46,6 +46,8 @@ def load_spatial_datasets(tables):
     Arguments:
     tables -- a list of table names
     """
+    # TODO: Upgrade PostGIS so can use ST_AsGeoJSON, then try this again
+    """
     engine = create_engine(SPATIAL_CONNECTION_STRING)
     session = Session(engine)
 
@@ -76,6 +78,8 @@ def load_spatial_datasets(tables):
         # Alternatively, using geopandas:
         # gdf = geopandas.read_postgis(sql, engine)
         # gdf.to_file(DATA_DIR / f"{table}.geojson", driver="GeoJSON")
+    """
+    return None
 
 @app.command()
 def main(

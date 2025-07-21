@@ -28,7 +28,7 @@ packages_to_install = copy(packages)
 
 # {% if cookiecutter.include_code_scaffold == "Yes" %}
 packages_to_install += scaffold
-packages_to_installl += ["sqlalchemy", "psycopg2", "jupyter"]
+packages_to_install += ["sqlalchemy", "psycopg2", "jupyter"]
 # {% endif %}
 
 # {% if cookiecutter.pydata_packages == "basic" %}

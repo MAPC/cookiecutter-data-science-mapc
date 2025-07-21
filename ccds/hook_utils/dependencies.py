@@ -21,6 +21,7 @@ scaffold = [
     "typer",
     "loguru",
     "tqdm",
+    "sqlalchemy"
 ]
 
 build = [

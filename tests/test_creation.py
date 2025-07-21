@@ -114,7 +114,7 @@ def verify_files(root, config):
         expected_files += [
             "notebooks/0.01-jtm-postgres-example.ipynb",
             f"src/{config['module_name']}/config.py",
-            f"src/{config['module_name']}/dataset.py",
+            f"src/{config['module_name']}/datasets.py",
             f"src/{config['module_name']}/plots.py",
         ]
 

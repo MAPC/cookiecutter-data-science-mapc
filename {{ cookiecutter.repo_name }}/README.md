@@ -9,6 +9,9 @@
 ## Project Organization
 
 ```
+├── .env               <- File for storing environment variables, which can be loaded using
+│                         python-dotenv and used in your module/notebooks
+│                         Note: ignored by .gitignore; _do not_ add or commit this file with git
 ├── LICENSE            <- Open-source license
 ├── Makefile           <- Makefile with convenience commands like `make data` or `make build`
 ├── README.md          <- The top-level README for developers using this project.
@@ -40,7 +43,7 @@
         │
         ├── config.py               <- Store useful variables and configuration
         │
-        ├── dataset.py              <- Scripts to download or generate data
+        ├── datasets.py             <- Scripts to download or generate data
         │
         └── plots.py                <- Code to create visualizations
 ```

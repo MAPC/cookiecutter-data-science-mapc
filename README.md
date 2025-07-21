@@ -72,7 +72,7 @@ The directory structure of your new project will look something like this (depen
         │
         ├── config.py               <- Store useful variables and configuration
         │
-        ├── dataset.py              <- Scripts to download or generate data
+        ├── datasets.py              <- Scripts to download or generate data
         │
         └── plots.py                <- Code to create visualizations
 ```

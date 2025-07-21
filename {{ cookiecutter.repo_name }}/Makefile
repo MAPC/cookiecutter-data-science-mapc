@@ -103,10 +103,10 @@ create_environment:
 #################################################################################
 
 {% if cookiecutter.include_code_scaffold == 'Yes' %}
-## Make dataset
+## Make datasets
 .PHONY: data
 data: requirements
-	$(PYTHON_INTERPRETER) {{ cookiecutter.module_name }}/dataset.py
+	$(PYTHON_INTERPRETER) {{ cookiecutter.module_name }}/datasets.py
 {% endif %}
 
 #################################################################################

@@ -14,5 +14,6 @@
         "pyproject.toml",
         "environment.yml"
     ],
-    "include_code_scaffold": ["Yes", "No"]
+    "include_code_scaffold": ["Yes", "No"],
+    "__src_dir_name": "src"
 }

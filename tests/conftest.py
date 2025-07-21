@@ -42,11 +42,6 @@ def config_generator(fast=False):
 
     def _is_valid(config):
         config = dict(config)
-        #  Pipfile + pipenv only valid combo for either
-        if (config["environment_manager"] == "pipenv") ^ (
-            config["dependency_file"] == "Pipfile"
-        ):
-            return False
         # conda is the only valid env manager for environment.yml
         if (config["dependency_file"] == "environment.yml") and (
             config["environment_manager"] != "conda"
@@ -64,10 +59,6 @@ def config_generator(fast=False):
             [
                 ("include_code_scaffold", opt)
                 for opt in cookiecutter_json["include_code_scaffold"]
-            ],
-            [
-                ("linting_and_formatting", opt)
-                for opt in cookiecutter_json["linting_and_formatting"]
             ],
         )
     )

@@ -59,26 +59,18 @@ def verify_folders(root, config):
     expected_dirs = [
         ".",
         "data",
-        "data/external",
-        "data/interim",
-        "data/processed",
-        "data/raw",
         "docs",
-        "models",
         "notebooks",
         "references",
-        "reports",
-        "reports/figures",
-        config["module_name"],
+        "visualizations",
+        "visualizations/figures",
+        "src",
     ]
 
     if config["include_code_scaffold"] == "Yes":
         expected_dirs += [
-            f"{config['module_name']}/modeling",
+            f"src/{config['module_name']}",
         ]
-
-    if config["docs"] == "mkdocs":
-        expected_dirs += ["docs/docs"]
 
     expected_dirs = [
         #  (root / d).resolve().relative_to(root) for d in expected_dirs
@@ -98,38 +90,27 @@ def verify_files(root, config):
     expected_files = [
         "Makefile",
         "README.md",
+        "LICENSE",
         "pyproject.toml",
         ".env",
         ".gitignore",
-        "data/external/.gitkeep",
-        "data/interim/.gitkeep",
-        "data/processed/.gitkeep",
-        "data/raw/.gitkeep",
+        ".editorconfig",
+        "data/.gitkeep",
         "docs/.gitkeep",
         "notebooks/.gitkeep",
+        "notebooks/.nbautoexport",
         "references/.gitkeep",
-        "reports/.gitkeep",
-        "reports/figures/.gitkeep",
-        "models/.gitkeep",
-        f"{config['module_name']}/__init__.py",
+        "visualizations/.gitkeep",
+        "visualizations/figures/.gitkeep",
+        f"src/{config['module_name']}/__init__.py",
     ]
-
-    # conditional files
-    if not config["open_source_license"].startswith("No license"):
-        expected_files.append("LICENSE")
-
-    if config["linting_and_formatting"] == "flake8+black+isort":
-        expected_files.append("setup.cfg")
 
     if config["include_code_scaffold"] == "Yes":
         expected_files += [
-            f"{config['module_name']}/config.py",
-            f"{config['module_name']}/dataset.py",
-            f"{config['module_name']}/features.py",
-            f"{config['module_name']}/modeling/__init__.py",
-            f"{config['module_name']}/modeling/train.py",
-            f"{config['module_name']}/modeling/predict.py",
-            f"{config['module_name']}/plots.py",
+            "notebooks/0.01-jtm-postgres-example.ipynb",
+            f"src/{config['module_name']}/config.py",
+            f"src/{config['module_name']}/dataset.py",
+            f"src/{config['module_name']}/plots.py",
         ]
 
     if config["docs"] == "mkdocs":
@@ -165,10 +146,6 @@ def verify_makefile_commands(root, config):
 
     if config["environment_manager"] == "conda":
         harness_path = test_path / "conda_harness.sh"
-    elif config["environment_manager"] == "virtualenv":
-        harness_path = test_path / "virtualenv_harness.sh"
-    elif config["environment_manager"] == "pipenv":
-        harness_path = test_path / "pipenv_harness.sh"
     elif config["environment_manager"] == "uv":
         harness_path = test_path / "uv_harness.sh"
     elif config["environment_manager"] == "none":
@@ -183,6 +160,7 @@ def verify_makefile_commands(root, config):
             BASH_EXECUTABLE,
             str(harness_path),
             str(root.resolve()),
+            "src",
             str(config["module_name"]),
         ],
         stderr=PIPE,
@@ -196,13 +174,8 @@ def verify_makefile_commands(root, config):
     assert "clean                    Delete all compiled Python files" in stdout_output
 
     # Check that linting and formatting ran successfully
-    if config["linting_and_formatting"] == "ruff":
         assert "All checks passed!" in stdout_output
         assert "left unchanged" in stdout_output
         assert "reformatted" not in stdout_output
-    elif config["linting_and_formatting"] == "flake8+black+isort":
-        assert "All done!" in stderr_output
-        assert "left unchanged" in stderr_output
-        assert "reformatted" not in stderr_output
 
     assert result.returncode == 0

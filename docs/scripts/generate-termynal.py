@@ -50,17 +50,11 @@ ccds_script = [
     ("author_name", "Dat A. Scientist"),
     ("description", "This is my analysis of the data."),
     ("python_version_number", "3.12"),
-    ("Choose from", "3"),  # dataset_storage
-    ("bucket", "s3://my-aws-bucket"),
-    ("aws_profile", ""),
-    ("Choose from", "2"),  # environment_manager
+    ("Choose from", "1"),  # environment_manager
     ("Choose from", "1"),  # dependency_file
-    ("Choose from", "2"),  # pydata_packages
-    ("Choose from", "3"),  # testing_framework
-    ("Choose from", "1"),  # linting_and_formatting
-    ("Choose from", "2"),  # open_source_license
+    ("Choose from", "1"),  # pydata_packages
     ("Choose from", "1"),  # docs
-    ("Choose from", "2"),  # include_code_scaffold
+    ("Choose from", "1"),  # include_code_scaffold
 ]
 
 
@@ -139,7 +133,7 @@ def render_termynal():
 
     # replace local directory in ccds call with URL so it can be used for documentation
     output = output.replace(
-        str(CCDS_ROOT), "https://github.com/drivendataorg/cookiecutter-data-science"
+        str(CCDS_ROOT), "https://github.com/MAPC/cookiecutter-data-science-mapc"
     )
     return output
 

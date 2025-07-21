@@ -6,8 +6,8 @@
     "description": "A short description of the project.",
     "python_version_number": "3.10",
     "environment_manager": [
-        "conda",
         "uv",
+        "conda",
         "none"
     ],
     "dependency_file": [

@@ -37,13 +37,11 @@ pip_only_packages = [
 # Use the selected documentation package specified in the config,
 # or none if none selected
 docs_path = Path("docs")
-# {% if cookiecutter.docs != "none" %}
-packages_to_install += ["{{ cookiecutter.docs }}"]
-pip_only_packages += ["{{ cookiecutter.docs }}"]
-docs_subpath = docs_path / "{{ cookiecutter.docs }}"
+packages_to_install += ["mkdocs"]
+pip_only_packages += ["mkdocs"]
+docs_subpath = docs_path / "mkdocs"
 for obj in docs_subpath.iterdir():
     shutil.move(str(obj), str(docs_path))
-# {% endif %}
 
 # Remove all remaining docs templates
 for docs_template in docs_path.iterdir():

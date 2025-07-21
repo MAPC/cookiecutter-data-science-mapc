@@ -23,6 +23,11 @@ scaffold = [
     "tqdm",
 ]
 
+build = [
+    "build",
+    "setuptools-scm",
+]
+
 
 def resolve_python_version_specifier(python_version):
     """Resolves the user-provided Python version string to a version specifier.
@@ -68,12 +73,13 @@ def write_python_version(python_version):
 
 
 def write_dependencies(
-    dependencies, packages, pip_only_packages, repo_name, module_name, python_version
+    dependencies, packages, pip_only_packages, repo_name, module_name, python_version, conda_package_aliases, dev_packages
 ):
     if dependencies == "pyproject.toml":
         with open(dependencies, "r") as f:
             doc = tomlkit.parse(f.read())
         doc["project"].add("dependencies", sorted(packages))
+        doc["dependency-groups"].add("dev", sorted(dev_packages))
         doc["project"]["dependencies"].multiline(True)
 
         with open(dependencies, "w") as f:
@@ -89,7 +95,7 @@ def write_dependencies(
             ]
 
             lines += [f"  - python={python_version}"]
-            lines += [f"  - {p}" for p in packages if p not in pip_only_packages]
+            lines += [f"  - {conda_package_aliases.get(p, p)}" for p in packages+dev_packages if p not in pip_only_packages]
 
             lines += ["  - pip:"]
             lines += [f"    - {p}" for p in packages if p in pip_only_packages]

@@ -10,6 +10,7 @@ from ccds.hook_utils.dependencies import (
     packages,
     ruff,
     scaffold,
+    build,
     write_dependencies,
     write_python_version,
 )
@@ -27,12 +28,15 @@ packages_to_install += scaffold
 packages_to_install += basic
 # {% endif %}
 
-packages_to_install += ruff
+dev_packages_to_install = [ruff, build]
 
 # track packages that are not available through conda
-pip_only_packages = [
-    "python-dotenv",
-]
+pip_only_packages = [ ]
+
+# track equivalent packages that are available through conda
+conda_package_aliases = {
+        "build": "python-build"
+}
 
 # Use the selected documentation package specified in the config,
 # or none if none selected
@@ -58,6 +62,8 @@ write_dependencies(
     repo_name="{{ cookiecutter.repo_name }}",
     module_name="{{ cookiecutter.module_name }}",
     python_version="{{ cookiecutter.python_version_number }}",
+    conda_package_aliases=conda_package_aliases,
+    dev_packages=dev_packages_to_install
 )
 
 write_python_version("{{ cookiecutter.python_version_number }}")

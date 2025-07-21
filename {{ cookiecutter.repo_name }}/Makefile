@@ -53,6 +53,25 @@ format:
 	ruff check --fix
 	ruff format
 
+## Build the Python package for distribution
+.PHONY: build
+build:
+	{% if cookiecutter.dependency_file != 'none' %}
+	{% if "uv" == cookiecutter.environment_manager -%}
+	uv sync --group dev
+	{% elif "conda" == cookiecutter.environment_manager -%}
+	@echo ">>> Temporarily adding build tools to conda env..."
+	conda install python-build setuptools-scm
+	{% endif -%}
+	{% endif -%}
+	python -m build
+	{% if cookiecutter.dependency_file != 'none' %}
+	{% if "conda" == cookiecutter.environment_manager -%}
+	@echo ">>> Restoring conda env to dependencies from environment.yaml..."
+	conda env update --name $(PROJECT_NAME) --file environment.yml --prune
+	{% endif -%}
+	{% endif -%}
+
 {% if cookiecutter.environment_manager != 'none' %}
 ## Set up Python interpreter environment
 .PHONY: create_environment

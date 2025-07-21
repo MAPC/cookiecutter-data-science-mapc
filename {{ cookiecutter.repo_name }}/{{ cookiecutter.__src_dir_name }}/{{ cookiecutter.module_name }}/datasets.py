@@ -5,6 +5,7 @@ from pathlib import Path
 # import pandas as pd
 # import geopandas as gpd
 from sqlalchemy import create_engine, select, text
+from sqlalchemy.orm import Session
 from loguru import logger
 from tqdm import tqdm
 import typer
@@ -26,7 +27,7 @@ def load_tabular_datasets(tables):
     for table in tables:
         rows = [row._asdict() for row in session.execute(text(f"select * from {table}")).all()]
         if len(rows) > 0:
-            with open(f"{table}.csv", 'w', newline='') as csv_file:
+            with open(DATA_DIR / f"{table}.csv", 'w', newline='') as csv_file:
                 fieldnames = rows[0].keys()
                 writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
 
@@ -59,14 +60,14 @@ def load_spatial_datasets(tables):
         "geometry": {}
     }
 
-    skip_properties = new set(["shape", "geometry"])
+    skip_properties = set(["shape", "geometry"])
 
     for table in tables:
         sql = f"select *, ST_AsGeoJSON(ST_Transform(shape, 4326)) as geometry from {table}"
         rows = [row._asdict() for row in session.execute(text(sql)).all()]
         if len(rows) > 0:
             new_feature_collection = empty_feature_collection.copy()
-            with open(f"{table}.geojson", 'w', newline='') as json_file:
+            with open(DATA_DIR / f"{table}.geojson", 'w', newline='') as json_file:
                 for row in rows:
                     new_feature = empty_feature.copy()
                     new_feature['properties'] = {key: value for key, value in row.items() if key not in skip_properties}

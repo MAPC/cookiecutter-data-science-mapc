@@ -138,6 +138,7 @@ celerybeat.pid
 
 # Environments
 .env
+!{{ cookiecutter.repo_name }}/.env
 .venv
 env/
 venv/

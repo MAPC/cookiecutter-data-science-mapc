@@ -7,7 +7,6 @@ from pathlib import Path
 from ccds.hook_utils.custom_config import write_custom_config
 from ccds.hook_utils.dependencies import (
     basic,
-    flake8_black_isort,
     packages,
     ruff,
     scaffold,
@@ -20,10 +19,6 @@ from ccds.hook_utils.dependencies import (
 #
 packages_to_install = copy(packages)
 
-# {% if cookiecutter.dataset_storage.s3 %}
-packages_to_install += ["awscli"]
-# {% endif %} #
-
 # {% if cookiecutter.include_code_scaffold == "Yes" %}
 packages_to_install += scaffold
 # {% endif %}
@@ -32,39 +27,12 @@ packages_to_install += scaffold
 packages_to_install += basic
 # {% endif %}
 
-# {% if cookiecutter.linting_and_formatting == "ruff" %}
 packages_to_install += ruff
-# Remove setup.cfg
-Path("setup.cfg").unlink()
-# {% elif cookiecutter.linting_and_formatting == "flake8+black+isort" %}
-packages_to_install += flake8_black_isort
-# {% endif %}
+
 # track packages that are not available through conda
 pip_only_packages = [
-    "awscli",
     "python-dotenv",
 ]
-
-# Select testing framework
-tests_path = Path("tests")
-
-# {% if cookiecutter.testing_framework == "pytest" %}
-packages_to_install += ["pytest"]
-# {% endif %}
-
-# {% if cookiecutter.testing_framework == "none" %}
-shutil.rmtree(tests_path)
-
-# {% else %}
-tests_subpath = tests_path / "{{ cookiecutter.testing_framework }}"
-for obj in tests_subpath.iterdir():
-    shutil.move(str(obj), str(tests_path))
-
-# Remove all remaining tests templates
-for tests_template in tests_path.iterdir():
-    if tests_template.is_dir() and not tests_template.name == "tests":
-        shutil.rmtree(tests_template)
-# {% endif %}
 
 # Use the selected documentation package specified in the config,
 # or none if none selected
@@ -97,10 +65,6 @@ write_dependencies(
 write_python_version("{{ cookiecutter.python_version_number }}")
 
 write_custom_config("{{ cookiecutter.custom_config }}")
-
-# Remove LICENSE if "No license file"
-if "{{ cookiecutter.open_source_license }}" == "No license file":
-    Path("LICENSE").unlink()
 
 # Make single quotes prettier
 # Jinja tojson escapes single-quotes with \u0027 since it's meant for HTML/JS

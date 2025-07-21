@@ -41,7 +41,6 @@ clean:
 	find . -type f -name "*.py[co]" -delete
 	find . -type d -name "__pycache__" -delete
 
-{% if cookiecutter.linting_and_formatting == 'ruff' %}
 ## Lint using ruff (use `make format` to do formatting)
 .PHONY: lint
 lint:
@@ -53,59 +52,6 @@ lint:
 format:
 	ruff check --fix
 	ruff format
-{% elif cookiecutter.linting_and_formatting == 'flake8+black+isort' %}
-## Lint using flake8, black, and isort (use `make format` to do formatting)
-.PHONY: lint
-lint:
-	flake8 {{ cookiecutter.module_name }}
-	isort --check --diff {{ cookiecutter.module_name }}
-	black --check {{ cookiecutter.module_name }}
-
-## Format source code with black
-.PHONY: format
-format:
-	isort {{ cookiecutter.module_name }}
-	black {{ cookiecutter.module_name }}
-{% endif %}
-
-{% if cookiecutter.testing_framework != 'none' %}
-## Run tests
-.PHONY: test
-test:
-{%- if cookiecutter.testing_framework == 'unittest' %}
-	python -m unittest discover -s tests
-{%- elif cookiecutter.testing_framework == 'pytest' %}
-	python -m pytest tests
-{%- endif -%}
-{%- endif -%}
-
-{% if not cookiecutter.dataset_storage.none %}
-## Download Data from storage system
-.PHONY: sync_data_down
-sync_data_down:
-	{% if cookiecutter.dataset_storage.s3 -%}
-	aws s3 sync s3://{{ cookiecutter.dataset_storage.s3.bucket }}/data/ \
-		data/ {% if cookiecutter.dataset_storage.s3.aws_profile != 'default' %} --profile {{ cookiecutter.dataset_storage.s3.aws_profile }}{% endif %}
-	{% elif cookiecutter.dataset_storage.azure -%}
-	az storage blob download-batch -s {{ cookiecutter.dataset_storage.azure.container }}/data/ \
-		-d data/
-	{% elif cookiecutter.dataset_storage.gcs -%}
-	gsutil -m rsync -r gs://{{ cookiecutter.dataset_storage.gcs.bucket }}/data/ data/
-	{% endif %}
-
-## Upload Data to storage system
-.PHONY: sync_data_up
-sync_data_up:
-	{% if cookiecutter.dataset_storage.s3 -%}
-	aws s3 sync data/ \
-		s3://{{ cookiecutter.dataset_storage.s3.bucket }}/data {% if cookiecutter.dataset_storage.s3.aws_profile != 'default' %} --profile {{ cookiecutter.dataset_storage.s3.aws_profile }}{% endif %}
-	{% elif cookiecutter.dataset_storage.azure -%}
-	az storage blob upload-batch -d {{ cookiecutter.dataset_storage.azure.container }}/data/ \
-		-s data/
-	{% elif cookiecutter.dataset_storage.gcs -%}
-	gsutil -m rsync -r data/ gs://{{ cookiecutter.dataset_storage.gcs.bucket }}/data/
-	{% endif %}
-{% endif %}
 
 {% if cookiecutter.environment_manager != 'none' %}
 ## Set up Python interpreter environment

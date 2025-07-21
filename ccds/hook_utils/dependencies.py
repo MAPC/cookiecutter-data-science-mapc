@@ -5,12 +5,6 @@ packages = [
     "python-dotenv",
 ]
 
-flake8_black_isort = [
-    "black",
-    "flake8",
-    "isort",
-]
-
 ruff = ["ruff"]
 
 basic = [
@@ -76,16 +70,7 @@ def write_python_version(python_version):
 def write_dependencies(
     dependencies, packages, pip_only_packages, repo_name, module_name, python_version
 ):
-    if dependencies == "requirements.txt":
-        with open(dependencies, "w") as f:
-            lines = sorted(packages)
-
-            lines += ["" "-e ."]
-
-            f.write("\n".join(lines))
-            f.write("\n")
-
-    elif dependencies == "pyproject.toml":
+    if dependencies == "pyproject.toml":
         with open(dependencies, "r") as f:
             doc = tomlkit.parse(f.read())
         doc["project"].add("dependencies", sorted(packages))
@@ -109,16 +94,5 @@ def write_dependencies(
             lines += ["  - pip:"]
             lines += [f"    - {p}" for p in packages if p in pip_only_packages]
             lines += ["    - -e ."]
-
-            f.write("\n".join(lines))
-
-    elif dependencies == "Pipfile":
-        with open(dependencies, "w") as f:
-            lines = ["[packages]"]
-            lines += [f'{p} = "*"' for p in sorted(packages)]
-
-            lines += [f'"{module_name}" ={{editable = true, path = "."}}']
-
-            lines += ["", "[requires]", f'python_version = "{python_version}"']
 
             f.write("\n".join(lines))

@@ -1,6 +1,6 @@
 [build-system]
-requires = ["flit_core >=3.2,<4"]
-build-backend = "flit_core.buildapi"
+requires = ["setuptools", "setuptools-scm"]
+build-backend = "setuptools.build_meta"
 
 [project]
 name = {{ cookiecutter.module_name|tojson }}
@@ -8,34 +8,28 @@ version = "0.0.1"
 description = {{ cookiecutter.description|tojson }}
 authors = [
   { name = {{ cookiecutter.author_name|tojson }} },
+  { name = "MAPC" },
 ]
-{% if cookiecutter.open_source_license != 'No license file' %}license = { file = "LICENSE" }{% endif %}
+license = { file = "LICENSE" }
 readme = "README.md"
 classifiers = [
     "Programming Language :: Python :: 3",
-    {% if cookiecutter.open_source_license == 'MIT' %}"License :: OSI Approved :: MIT License"{% elif cookiecutter.open_source_license == 'BSD-3-Clause' %}"License :: OSI Approved :: BSD License"{% endif %}
+    "License :: OSI Approved :: MIT License"
 ]
-{% if cookiecutter.linting_and_formatting == 'flake8+black+isort' %}
-[tool.black]
-line-length = 99
-include = '\.pyi?$'
-exclude = '''
-/(
-    \.git
-  | \.venv
-)/
-'''
 
-[tool.isort]
-profile = "black"
-known_first_party = ["{{ cookiecutter.module_name }}"]
-force_sort_within_sections = true
-{% endif %}
-{% if cookiecutter.linting_and_formatting == 'ruff' %}
+[project.optional-dependencies]
+notebooks = [
+    "jupyter",
+    "nbautoexport",
+]
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
 [tool.ruff]
-line-length = 99
-src = ["{{ cookiecutter.module_name }}"]
-include = ["pyproject.toml", "{{ cookiecutter.module_name }}/**/*.py"]
+line-length = 160
+src = ["src/{{ cookiecutter.module_name }}"]
+include = ["pyproject.toml", "src/{{ cookiecutter.module_name }}/**/*.py"]
 
 [tool.ruff.lint]
 extend-select = ["I"]  # Add import sorting
@@ -43,4 +37,3 @@ extend-select = ["I"]  # Add import sorting
 [tool.ruff.lint.isort]
 known-first-party = ["{{ cookiecutter.module_name }}"]
 force-sort-within-sections = true
-{% endif %}

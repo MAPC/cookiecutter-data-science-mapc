@@ -10,7 +10,7 @@ from ccds.hook_utils.dependencies import (
     packages,
     ruff,
     scaffold,
-    build,
+    build_deps,
     write_dependencies,
     write_python_version,
 )
@@ -28,14 +28,14 @@ packages_to_install += scaffold
 packages_to_install += basic
 # {% endif %}
 
-dev_packages_to_install = [ruff, build]
+dev_packages_to_install = [ruff, build_deps]
 
 # track packages that are not available through conda
 pip_only_packages = [ ]
 
 # track equivalent packages that are available through conda
 conda_package_aliases = {
-        "build": "python-build"
+    "build": "python-build"
 }
 
 # Use the selected documentation package specified in the config,

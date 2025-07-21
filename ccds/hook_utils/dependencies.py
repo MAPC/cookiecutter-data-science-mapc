@@ -24,7 +24,7 @@ scaffold = [
     "sqlalchemy"
 ]
 
-build = [
+build_deps = [
     "build",
     "setuptools-scm",
 ]

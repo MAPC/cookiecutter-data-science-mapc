@@ -60,6 +60,7 @@ def verify_folders(root, config):
         ".",
         "data",
         "docs",
+        "docs/docs"
         "notebooks",
         "references",
         "visualizations",
@@ -97,6 +98,10 @@ def verify_files(root, config):
         ".editorconfig",
         "data/.gitkeep",
         "docs/.gitkeep",
+        "docs/mkdocs.yml",
+        "docs/README.md",
+        "docs/docs/index.md",
+        "docs/docs/getting-started.md",
         "notebooks/.gitkeep",
         "notebooks/.nbautoexport",
         "references/.gitkeep",
@@ -111,14 +116,6 @@ def verify_files(root, config):
             f"src/{config['module_name']}/config.py",
             f"src/{config['module_name']}/dataset.py",
             f"src/{config['module_name']}/plots.py",
-        ]
-
-    if config["docs"] == "mkdocs":
-        expected_files += [
-            "docs/mkdocs.yml",
-            "docs/README.md",
-            "docs/docs/index.md",
-            "docs/docs/getting-started.md",
         ]
 
     expected_files.append(config["dependency_file"])

@@ -52,8 +52,6 @@ ccds_script = [
     ("python_version_number", "3.12"),
     ("Choose from", "1"),  # environment_manager
     ("Choose from", "1"),  # dependency_file
-    ("Choose from", "1"),  # pydata_packages
-    ("Choose from", "1"),  # docs
     ("Choose from", "1"),  # include_code_scaffold
 ]
 

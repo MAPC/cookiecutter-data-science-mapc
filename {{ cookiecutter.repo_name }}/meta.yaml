@@ -1,0 +1,26 @@
+package:
+  name: {{ cookiecutter.module_name|tojson }}
+  version: "0.0.1"
+
+source:
+  git_url: "https://github.com/MAPC/{{ cookiecutter.repo_name }}.git"
+
+build:
+  script: python setup.py install
+
+requirements:
+  build:
+    - git
+    - cmake
+    - python
+    - setuptools
+
+  run:
+    - python
+
+about:
+  home: "https://github.com/MAPC/{{ cookiecutter.repo_name }}"
+  license: MIT
+  license_file: LICENSE
+  summary: "{{  cookiecutter.description|tojson }}"
+  description: See the package README.md for more information.

@@ -33,6 +33,7 @@ dependencies = [
   "click",
   "cookiecutter",
   "tomlkit",
+  "pyyaml",
 ]
 
 [project.scripts]

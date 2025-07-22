@@ -59,14 +59,11 @@ build:
 	{% if cookiecutter.dependency_file != 'none' %}
 	{% if "uv" == cookiecutter.environment_manager -%}
 	uv sync --group dev
+	python -m build
 	{% elif "conda" == cookiecutter.environment_manager -%}
 	@echo ">>> Temporarily adding build tools to conda env..."
-	conda install python-build setuptools-scm
-	{% endif -%}
-	{% endif -%}
-	python -m build
-	{% if cookiecutter.dependency_file != 'none' %}
-	{% if "conda" == cookiecutter.environment_manager -%}
+	conda install conda-build setuptools-scm
+	conda build .
 	@echo ">>> Restoring conda env to dependencies from environment.yaml..."
 	conda env update --name $(PROJECT_NAME) --file environment.yml --prune
 	{% endif -%}

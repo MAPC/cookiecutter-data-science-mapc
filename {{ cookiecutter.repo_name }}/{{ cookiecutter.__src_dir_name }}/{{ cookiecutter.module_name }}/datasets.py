@@ -27,13 +27,15 @@ def load_tabular_datasets(tables):
     for table in tables:
         rows = [row._asdict() for row in session.execute(text(f"select * from {table}")).all()]
         if len(rows) > 0:
-            with open(DATA_DIR / f"{table}.csv", 'w', newline='') as csv_file:
+            filename = DATA_DIR / f"{table}.csv"
+            with open(filename, 'w', newline='') as csv_file:
                 fieldnames = rows[0].keys()
                 writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
 
                 writer.writeheader()
                 for row in rows:
                     writer.writerow(row)
+            print(f"Saved to {filename}")
         # Alternatively, using pandas:
         # with dbapi.connect(TABULAR_CONNECTION_STRING) as conn:
         #     df = pd.read_sql('SELECT * FROM {table}', conn)

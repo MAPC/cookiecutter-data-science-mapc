@@ -2,7 +2,13 @@ import shutil
 from copy import copy
 from pathlib import Path
 
+from yaml import load, dump
 import tomlkit
+try:
+    from yaml import CLoader as Loader, CDumper as Dumper
+except ImportError:
+    from yaml import Loader, Dumper
+
 # https://github.com/cookiecutter/cookiecutter/issues/824
 #   our workaround is to include these utility functions in the CCDS package
 from ccds.hook_utils.custom_config import write_custom_config
@@ -21,6 +27,12 @@ build_deps = [
     "setuptools-scm",
 ]
 
+scaffold_deps = [
+    "sqlalchemy",
+    "psycopg2",
+    "jupyter"
+]
+
 #
 #  TEMPLATIZED VARIABLES FILLED IN BY COOKIECUTTER
 #
@@ -28,7 +40,7 @@ packages_to_install = copy(packages)
 
 # {% if cookiecutter.include_code_scaffold == "Yes" %}
 packages_to_install += scaffold
-packages_to_install += ["sqlalchemy", "psycopg2", "jupyter"]
+packages_to_install += scaffold_deps
 # {% endif %}
 
 # {% if cookiecutter.pydata_packages == "basic" %}
@@ -42,7 +54,7 @@ pip_only_packages = [ ]
 
 # track equivalent packages that are available through conda
 conda_package_aliases = {
-    "build": "python-build"
+    "build": "conda-build"
 }
 
 if "{{ cookiecutter.dependency_file }}" == "environment.yaml":
@@ -76,13 +88,25 @@ write_dependencies(
     # dev_packages=dev_packages_to_install
 )
 
-if "{{ cookiecutter.dependency_file }}" == "pyproject.yaml":
-    with open("pyproject.yaml", "r") as f:
+if "{{ cookiecutter.dependency_file }}" == "pyproject.toml":
+    with open("pyproject.toml", "r") as f:
         doc = tomlkit.parse(f.read())
     doc["dependency-groups"].add("dev", sorted(dev_packages_to_install))
 
-    with open("pyproject.yaml", "w") as f:
+    with open("pyproject.toml", "w") as f:
         f.write(tomlkit.dumps(doc))
+	Path("meta.yaml").unlink() # Remove unused meta.yml file
+elif "{{ cookiecutter.dependency_file }}" == "environment.yaml":
+    with open("meta.yaml", "r") as f:
+        doc = load(f.read(), Loader=Loader)
+    # TODO: Maybe just plug in values from pyproject.toml directly in the yaml, e.g.
+    #       {% set pyproject = load_file_data('pyproject.toml') %}
+    #       name: {{ pyproject.get('name') }}
+    doc['requirements']['build'].extend(dev_packages_to_install)
+    doc['requirements']['run'].extend(packages_to_install)
+
+    with open("meta.yaml", "w") as f:
+        f.write(dump(doc, Dumper=Dumper))
 
 write_python_version("{{ cookiecutter.python_version_number }}")
 

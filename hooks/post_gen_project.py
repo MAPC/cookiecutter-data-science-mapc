@@ -104,10 +104,8 @@ elif "{{ cookiecutter.dependency_file }}" == "environment.yml":
     # TODO: Maybe just plug in values from pyproject.toml directly in the yaml, e.g.
     # https://docs.conda.io/projects/conda-build/en/latest/resources/define-metadata.html#loading-data-from-other-files
     python_string = "python={{ cookiecutter.python_version_number}}"
-    doc['requirements']['build'] += [python_string]
-    doc['requirements']['build'] += dev_packages_to_install
-    doc['requirements']['run'] += [python_string]
-    doc['requirements']['run'] += packages_to_install
+    doc['requirements']['build'] = [python_string] + dev_packages_to_install
+    doc['requirements']['run'] = [python_string] + packages_to_install
 
     with open("meta.yaml", "w") as f:
         f.write(dump(doc, Dumper=Dumper))

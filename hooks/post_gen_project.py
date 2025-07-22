@@ -95,7 +95,7 @@ if "{{ cookiecutter.dependency_file }}" == "pyproject.toml":
 
     with open("pyproject.toml", "w") as f:
         f.write(tomlkit.dumps(doc))
-	Path("meta.yaml").unlink() # Remove unused meta.yml file
+    Path("meta.yaml").unlink() # Remove unused meta.yml file
 elif "{{ cookiecutter.dependency_file }}" == "environment.yaml":
     with open("meta.yaml", "r") as f:
         doc = load(f.read(), Loader=Loader)

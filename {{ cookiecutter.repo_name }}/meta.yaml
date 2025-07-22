@@ -16,15 +16,7 @@ extra:
 
 requirements:
   build:
-    - python
-    - conda-build
-    - python-build
-    - setuptools
-    - conda-forge::setuptools-scm
   run:
-    - python
-    - pip
-    - python-dotenv
 
 source:
   path: .

@@ -18,7 +18,7 @@
 │
 ├── data               <- Directory for saving local copies of datasets and/or temporary datasets
 │
-├── docs               <- A default mkdocs project; see www.mkdocs.org for details
+├── docs               <- Directory for any other supporting documentation beyond the README
 │
 ├── notebooks          <- Jupyter notebooks. Naming convention is a number (for ordering),
 │                         the creator's initials, and a short `-` delimited description, e.g.

@@ -60,7 +60,6 @@ def verify_folders(root, config):
         ".",
         "data",
         "docs",
-        "docs/docs"
         "notebooks",
         "references",
         "visualizations",
@@ -98,10 +97,6 @@ def verify_files(root, config):
         ".editorconfig",
         "data/.gitkeep",
         "docs/.gitkeep",
-        "docs/mkdocs.yml",
-        "docs/README.md",
-        "docs/docs/index.md",
-        "docs/docs/getting-started.md",
         "notebooks/.gitkeep",
         "notebooks/.nbautoexport",
         "references/.gitkeep",

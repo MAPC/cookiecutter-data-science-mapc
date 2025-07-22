@@ -64,17 +64,17 @@ if "{{ cookiecutter.dependency_file }}" == "environment.yml":
 
 # Use the selected documentation package specified in the config,
 # or none if none selected
-docs_path = Path("docs")
-packages_to_install += ["mkdocs"]
-pip_only_packages += ["mkdocs"]
-docs_subpath = docs_path / "mkdocs"
-for obj in docs_subpath.iterdir():
-    shutil.move(str(obj), str(docs_path))
+# docs_path = Path("docs")
+# dev_packages_to_install += ["mkdocs"]
+# pip_only_packages += ["mkdocs"]
+# docs_subpath = docs_path / "mkdocs"
+# for obj in docs_subpath.iterdir():
+#     shutil.move(str(obj), str(docs_path))
 
 # Remove all remaining docs templates
-for docs_template in docs_path.iterdir():
-    if docs_template.is_dir() and not docs_template.name == "docs":
-        shutil.rmtree(docs_template)
+# for docs_template in docs_path.iterdir():
+#     if docs_template.is_dir() and not docs_template.name == "docs":
+#         shutil.rmtree(docs_template)
 
 #
 #  POST-GENERATION FUNCTIONS

@@ -22,5 +22,5 @@ about:
   home: "https://github.com/MAPC/{{ cookiecutter.repo_name }}"
   license: MIT
   license_file: LICENSE
-  summary: "{{  cookiecutter.description|tojson }}"
+  summary: {{  cookiecutter.description|tojson }}
   description: See the package README.md for more information.

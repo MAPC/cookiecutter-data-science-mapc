@@ -57,7 +57,7 @@ conda_package_aliases = {
     "build": "conda-build"
 }
 
-if "{{ cookiecutter.dependency_file }}" == "environment.yaml":
+if "{{ cookiecutter.dependency_file }}" == "environment.yml":
     packages_to_install = [conda_package_aliases.get(p, p) for p in packages+dev_packages_to_install if p not in pip_only_packages]
 
 # Use the selected documentation package specified in the config,
@@ -95,16 +95,16 @@ if "{{ cookiecutter.dependency_file }}" == "pyproject.toml":
 
     with open("pyproject.toml", "w") as f:
         f.write(tomlkit.dumps(doc))
-    Path("meta.yaml").unlink() # Remove unused meta.yml file
-elif "{{ cookiecutter.dependency_file }}" == "environment.yaml":
-    with open("meta.yaml", "r") as f:
+    Path("meta.yml").unlink() # Remove unused meta.yml file
+elif "{{ cookiecutter.dependency_file }}" == "environment.yml":
+    with open("meta.yml", "r") as f:
         doc = load(f.read(), Loader=Loader)
     # TODO: Maybe just plug in values from pyproject.toml directly in the yaml, e.g.
     # https://docs.conda.io/projects/conda-build/en/latest/resources/define-metadata.html#loading-data-from-other-files
-    doc['requirements']['build'].extend(dev_packages_to_install)
-    doc['requirements']['run'].extend(packages_to_install)
+    doc['requirements']['build'] += dev_packages_to_install
+    doc['requirements']['run'] += packages_to_install
 
-    with open("meta.yaml", "w") as f:
+    with open("meta.yml", "w") as f:
         f.write(dump(doc, Dumper=Dumper))
 
 write_python_version("{{ cookiecutter.python_version_number }}")

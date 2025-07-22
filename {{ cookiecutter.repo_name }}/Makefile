@@ -62,9 +62,9 @@ build:
 	python -m build
 	{% elif "conda" == cookiecutter.environment_manager -%}
 	@echo ">>> Temporarily adding build tools to conda env..."
-	conda install conda-build setuptools-scm
+	conda install --name ${PROJECT_NAME} conda-build setuptools-scm
 	conda build .
-	@echo ">>> Restoring conda env to dependencies from environment.yaml..."
+	@echo ">>> Restoring conda env to dependencies from environment.yml..."
 	conda env update --name $(PROJECT_NAME) --file environment.yml --prune
 	{% endif -%}
 	{% endif -%}

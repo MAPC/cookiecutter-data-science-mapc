@@ -100,8 +100,7 @@ elif "{{ cookiecutter.dependency_file }}" == "environment.yaml":
     with open("meta.yaml", "r") as f:
         doc = load(f.read(), Loader=Loader)
     # TODO: Maybe just plug in values from pyproject.toml directly in the yaml, e.g.
-    #       {% set pyproject = load_file_data('pyproject.toml') %}
-    #       name: {{ pyproject.get('name') }}
+    # https://docs.conda.io/projects/conda-build/en/latest/resources/define-metadata.html#loading-data-from-other-files
     doc['requirements']['build'].extend(dev_packages_to_install)
     doc['requirements']['run'].extend(packages_to_install)
 
